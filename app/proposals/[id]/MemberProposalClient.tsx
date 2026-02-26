@@ -176,7 +176,7 @@ export default function MemberProposalClient({ proposal }: { proposal: Proposal 
         {/* Back Button */}
         <button
           onClick={() => router.back()}
-          className="mb-12 inline-flex items-center gap-2 px-6 py-3 text-[#666666] font-lato text-sm uppercase tracking-wide border border-[#f0f0f0] rounded-full transition-all duration-300 hover:text-black hover:border-black hover:bg-[#f8f8f8]"
+          className="mb-12 inline-flex items-center gap-2 px-6 py-3 text-[#666666] font-lato text-sm uppercase tracking-wide border border-[#f0f0f0] transition-all duration-300 hover:text-black hover:border-black hover:bg-[#f8f8f8]"
         >
           <svg
             className="w-4 h-4 transition-transform duration-300"
@@ -191,7 +191,7 @@ export default function MemberProposalClient({ proposal }: { proposal: Proposal 
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          <span>Back</span>
+          <span>Home</span>
         </button>
 
         {/* Header */}

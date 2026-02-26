@@ -40,6 +40,27 @@ export default async function ConciergeDashboard() {
       </header>
 
       <div className="mx-auto max-w-7xl px-6 py-16">
+        {/* Back Button */}
+        <Link
+          href="/"
+          className="mb-8 inline-flex items-center gap-2 px-6 py-3 text-[#666666] font-lato text-sm uppercase tracking-wide border border-[#f0f0f0] transition-all duration-300 hover:text-black hover:border-black hover:bg-[#f8f8f8]"
+        >
+          <svg
+            className="w-4 h-4 transition-transform duration-300"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2.5}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+          <span>Home</span>
+        </Link>
+
         {/* Page Header */}
         <div className="mb-16">
           <h1 className="font-playfair text-5xl text-[#2c2416] mb-4">
