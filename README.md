@@ -1,6 +1,6 @@
 # Exclusive Resorts - Itinerary Proposal System
 
-A luxury concierge itinerary management system built with Next.js 14+, TypeScript, Tailwind CSS, and SQLite.
+A luxury concierge itinerary management system built with Next.js 16, TypeScript, Tailwind CSS, and SQLite.
 
 ## 🚀 Quick Start
 
@@ -106,9 +106,9 @@ Status flow: `DRAFT → SENT → APPROVED → PAID`
 
 ## 🎨 Tech Stack
 
-- **Frontend**: Next.js 14 (App Router), React 19, TypeScript
+- **Frontend**: Next.js 16 (App Router), React 19, TypeScript
 - **Styling**: Tailwind CSS 4
-- **Database**: SQLite with Prisma ORM
+- **Database**: SQLite with Prisma 7
 - **SQLite Adapter**: better-sqlite3
 
 ## 🤔 Design Decisions
@@ -164,14 +164,14 @@ Status flow: `DRAFT → SENT → APPROVED → PAID`
 
 ## 🏆 What Was Most Challenging
 
-**Client vs Server Components in Next.js 14** - The App Router's approach to server/client boundaries required careful planning. Deciding where to fetch data (server) vs where to handle interactions (client) took iteration to get right.
+**Client vs Server Components in Next.js 16** - The App Router's approach to server/client boundaries required careful planning. Deciding where to fetch data (server) vs where to handle interactions (client) took iteration to get right.
 
 **Date/time handling** - Managing timezones, formatting dates consistently between server/client, and grouping itinerary items by day required careful attention to edge cases.
 
 ## 🧪 Testing the Application
 
 ### Initial Setup
-1. Visit `/concierge` to see the dashboard
+1. Visit `http://localhost:3000` or `/concierge` to see the dashboard
 2. Click on the reservation for James Whitfield
 3. Create a new proposal
 
