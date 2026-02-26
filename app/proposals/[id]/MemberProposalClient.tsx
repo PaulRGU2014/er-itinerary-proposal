@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface ProposalItem {
   id: number;
@@ -38,6 +39,7 @@ const CATEGORY_ICONS: Record<string, string> = {
 };
 
 export default function MemberProposalClient({ proposal }: { proposal: Proposal }) {
+  const router = useRouter();
   const [status, setStatus] = useState(proposal.status);
   const [loading, setLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -171,6 +173,27 @@ export default function MemberProposalClient({ proposal }: { proposal: Proposal 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
+        {/* Back Button */}
+        <button
+          onClick={() => router.back()}
+          className="mb-8 inline-flex items-center gap-3 rounded-full bg-white/70 backdrop-blur-md px-6 py-3 text-slate-700 font-semibold transition-all duration-300 hover:bg-white hover:shadow-lg hover:text-blue-600 border border-white/50"
+        >
+          <svg
+            className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-0.5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2.5}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+          <span>Back</span>
+        </button>
+
         {/* Header */}
         <div className="mb-8 text-center">
           <div className="mb-4 inline-block rounded-full bg-blue-100 px-4 py-1 text-sm font-semibold text-blue-800">
