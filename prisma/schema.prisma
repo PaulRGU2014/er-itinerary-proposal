@@ -4,7 +4,6 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
 }
 
 model Member {
@@ -48,12 +47,14 @@ model ProposalItem {
 }
 
 model SentEmail {
-  id          Int       @id @default(autoincrement())
-  proposal    Proposal  @relation(fields: [proposalId], references: [id])
-  proposalId  Int
-  toEmail     String
-  sentAt      DateTime  @default(now())
+  id         Int      @id @default(autoincrement())
+  proposal   Proposal @relation(fields: [proposalId], references: [id])
+  proposalId Int
+  sentAt     DateTime
+  subject    String
+  body       String
   bodyPreview String
+  toEmail    String
 }
 
 enum ProposalStatus {

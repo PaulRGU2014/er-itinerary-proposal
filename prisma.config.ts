@@ -5,7 +5,6 @@ export default defineConfig({
     seed: "ts-node ./prisma/seed.ts",
   },
   datasource: {
-    provider: "sqlite",
     url: "file:./dev.db",
   },
 });
