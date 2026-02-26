@@ -9,13 +9,13 @@ export default async function ReservationPage({
 
   const reservationRes = await fetch(
     `http://localhost:3000/api/reservations/${id}`,
-    { cache: "no-store" }
+    { cache: "no-store" },
   );
   const reservation = await reservationRes.json();
 
   const proposalsRes = await fetch(
     `http://localhost:3000/api/proposals?reservationId=${id}`,
-    { cache: "no-store" }
+    { cache: "no-store" },
   );
   const proposals = await proposalsRes.json();
 
@@ -49,6 +49,12 @@ export default async function ReservationPage({
           </Link>
         </div>
       )}
+      <a
+        href="/concierge"
+        style={{ display: "inline-block", marginBottom: 16 }}
+      >
+        ← Back to Concierge Home
+      </a>
     </div>
   );
 }

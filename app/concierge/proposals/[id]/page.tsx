@@ -25,6 +25,13 @@ export default async function ProposalEditor({
 
   return (
     <div style={{ padding: 24 }}>
+      <a
+        href="/concierge"
+        style={{ display: "inline-block", marginBottom: 16 }}
+      >
+        ← Back to Concierge Home
+      </a>
+
       <h1>Proposal #{proposal.id}</h1>
       <p>Status: {proposal.status}</p>
 
@@ -32,8 +39,7 @@ export default async function ProposalEditor({
       <ul>
         {proposal.items.map((item: ProposalItem) => (
           <li key={item.id}>
-            <strong>{item.category}</strong>: {item.title} — $
-            {item.price}
+            <strong>{item.category}</strong>: {item.title} — ${item.price}
           </li>
         ))}
       </ul>
@@ -47,7 +53,12 @@ export default async function ProposalEditor({
         <label htmlFor="description">Description</label>
         <input id="description" name="description" placeholder="Description" />
         <label htmlFor="scheduledAt">Scheduled at</label>
-        <input id="scheduledAt" name="scheduledAt" type="datetime-local" required />
+        <input
+          id="scheduledAt"
+          name="scheduledAt"
+          type="datetime-local"
+          required
+        />
         <label htmlFor="price">Price</label>
         <input id="price" name="price" type="number" required />
         <button type="submit">Add Item</button>
@@ -58,6 +69,15 @@ export default async function ProposalEditor({
       <form action={`/api/proposals/${id}/send`} method="POST">
         <button type="submit">Send Proposal</button>
       </form>
+      <a href={`/proposals/${proposal.id}`} target="_blank">
+        View Guest Itinerary →
+      </a>
+      <a
+        href={`/concierge/reservations/${proposal.reservationId}`}
+        style={{ display: "inline-block", marginBottom: 16 }}
+      >
+        ← Back to Reservation
+      </a>
     </div>
   );
 }
