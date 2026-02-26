@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { prisma } from "@/app/lib/prisma";
 
 export default async function ReservationPage({
   params,
@@ -7,17 +8,28 @@ export default async function ReservationPage({
 }) {
   const { id } = await params;
 
-  const reservationRes = await fetch(
-    `http://localhost:3000/api/reservations/${id}`,
-    { cache: "no-store" },
-  );
-  const reservation = await reservationRes.json();
+  const reservation = await prisma.reservation.findUnique({
+    where: { id: Number(id) },
+    include: {
+      member: true,
+    },
+  });
 
-  const proposalsRes = await fetch(
-    `http://localhost:3000/api/proposals?reservationId=${id}`,
-    { cache: "no-store" },
-  );
-  const proposals = await proposalsRes.json();
+  if (!reservation) {
+    return (
+      <div className="min-h-screen bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16">
+          <p className="font-lora text-lg text-[#666666]">Reservation not found.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const proposals = await prisma.proposal.findMany({
+    where: { reservationId: reservation.id },
+    include: { items: true },
+    orderBy: { createdAt: "desc" },
+  });
 
   const proposal = proposals[0] ?? null;
 

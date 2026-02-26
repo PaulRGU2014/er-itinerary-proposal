@@ -1,8 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
-
-const adapter = new PrismaBetterSqlite3({ url: "file:./dev.db" });
-const prisma = new PrismaClient({ adapter });
+import { prisma } from "@/app/lib/prisma";
 
 // GET /api/proposals → list all proposals
 export async function GET() {

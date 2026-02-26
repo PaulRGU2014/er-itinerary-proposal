@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface ProposalItem {
   id: number;
@@ -39,7 +39,6 @@ const CATEGORY_ICONS: Record<string, string> = {
 };
 
 export default function MemberProposalClient({ proposal }: { proposal: Proposal }) {
-  const router = useRouter();
   const [status, setStatus] = useState(proposal.status);
   const [loading, setLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -174,8 +173,8 @@ export default function MemberProposalClient({ proposal }: { proposal: Proposal 
     <div className="min-h-screen bg-white">
       <div className="mx-auto max-w-4xl px-6 py-12">
         {/* Back Button */}
-        <button
-          onClick={() => router.back()}
+        <Link
+          href="/"
           className="mb-12 inline-flex items-center gap-2 px-6 py-3 text-[#666666] font-lato text-sm uppercase tracking-wide border border-[#f0f0f0] transition-all duration-300 hover:text-black hover:border-black hover:bg-[#f8f8f8]"
         >
           <svg
@@ -192,7 +191,7 @@ export default function MemberProposalClient({ proposal }: { proposal: Proposal 
             />
           </svg>
           <span>Home</span>
-        </button>
+        </Link>
 
         {/* Header */}
         <div className="mb-12 text-center">

@@ -141,43 +141,56 @@ export default function ProposalEditorClient({ proposal }: { proposal: Proposal 
   const totalCost = items.reduce((sum: number, item: ProposalItem) => sum + item.price, 0);
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-white">
+      <div className="mx-auto max-w-7xl px-6 py-12">
         {/* Header */}
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-10 flex items-start justify-between">
           <div>
             <Link
               href="/concierge"
-              className="mb-2 inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-900"
+              className="mb-4 inline-flex items-center gap-2 px-6 py-3 text-[#666666] font-lato text-sm uppercase tracking-wide border border-[#f0f0f0] transition-all duration-300 hover:text-black hover:border-black hover:bg-[#f8f8f8]"
             >
-              ← Back to Dashboard
+              <svg
+                className="w-4 h-4 transition-transform duration-300"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2.5}
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+              <span>Back</span>
             </Link>
-            <h1 className="text-3xl font-bold text-slate-900">
+            <h1 className="font-playfair text-4xl text-[#2c2416] mb-2">
               Proposal #{proposal.id}
             </h1>
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="font-lora text-[#8b8680]">
               Building itinerary for {reservation.member.name}
             </p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
             <button
               onClick={() => setShowPreview(!showPreview)}
-              className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
+              className="px-6 py-2 border border-black text-black font-lato text-xs uppercase tracking-wide transition-all duration-300 hover:bg-black hover:text-white"
             >
               {showPreview ? "Hide Preview" : "Show Preview"}
             </button>
             <Link
               href={`/proposals/${proposal.id}`}
               target="_blank"
-              className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
+              className="px-6 py-2 border border-black text-black font-lato text-xs uppercase tracking-wide transition-all duration-300 hover:bg-black hover:text-white"
             >
-              View as Member →
+              View as Member
             </Link>
             {proposal.status === "DRAFT" && items.length > 0 && (
               <button
                 onClick={handleSend}
                 disabled={sending}
-                className="rounded-lg bg-blue-600 px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
+                className="px-6 py-2 bg-black text-white font-lato text-xs uppercase tracking-wide transition-all duration-300 hover:shadow-2xl disabled:opacity-50"
               >
                 {sending ? "Sending..." : "Send to Member"}
               </button>
@@ -186,16 +199,16 @@ export default function ProposalEditorClient({ proposal }: { proposal: Proposal 
         </div>
 
         {/* Status Badge */}
-        <div className="mb-6">
+        <div className="mb-8">
           <span
-            className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
+            className={`inline-flex px-3 py-1 text-xs font-lato uppercase tracking-wide ${
               proposal.status === "DRAFT"
-                ? "bg-gray-100 text-gray-800"
+                ? "bg-[#f8f8f8] text-[#666666]"
                 : proposal.status === "SENT"
-                ? "bg-blue-100 text-blue-800"
+                ? "bg-[#f5f3f0] text-[#2c2416]"
                 : proposal.status === "APPROVED"
-                ? "bg-green-100 text-green-800"
-                : "bg-purple-100 text-purple-800"
+                ? "bg-[#d4af37]/10 text-[#a3860f]"
+                : "bg-black text-white"
             }`}
           >
             {proposal.status}
@@ -206,14 +219,14 @@ export default function ProposalEditorClient({ proposal }: { proposal: Proposal 
           {/* Left Column - Add Items */}
           <div className="space-y-6">
             {/* Reservation Context */}
-            <div className="overflow-hidden rounded-xl bg-white shadow">
-              <div className="border-b border-slate-200 bg-slate-50 px-6 py-4">
-                <h2 className="text-lg font-semibold text-slate-900">
+            <div className="overflow-hidden rounded-lg bg-white border border-[#e8e4df] shadow-sm">
+              <div className="border-b border-[#e8e4df] bg-gradient-to-r from-[#f5f3f0] to-[#f0ede8] px-6 py-4">
+                <h2 className="font-playfair text-xl text-[#2c2416]">
                   Reservation Details
                 </h2>
               </div>
               <div className="p-6">
-                <div className="space-y-2 text-sm">
+                <div className="space-y-2 text-sm text-[#2c2416]">
                   <p>
                     <span className="font-semibold">Guest:</span> {reservation.member.name}
                   </p>
@@ -234,9 +247,9 @@ export default function ProposalEditorClient({ proposal }: { proposal: Proposal 
             </div>
 
             {/* Category Selection */}
-            <div className="overflow-hidden rounded-xl bg-white shadow">
-              <div className="border-b border-slate-200 bg-slate-50 px-6 py-4">
-                <h2 className="text-lg font-semibold text-slate-900">
+            <div className="overflow-hidden rounded-lg bg-white border border-[#e8e4df] shadow-sm">
+              <div className="border-b border-[#e8e4df] bg-gradient-to-r from-[#f5f3f0] to-[#f0ede8] px-6 py-4">
+                <h2 className="font-playfair text-xl text-[#2c2416]">
                   Select Category
                 </h2>
               </div>
@@ -247,15 +260,15 @@ export default function ProposalEditorClient({ proposal }: { proposal: Proposal 
                       key={cat.name}
                       type="button"
                       onClick={() => setSelectedCategory(cat.name)}
-                      className={`rounded-lg border-2 p-4 text-left transition-all ${
+                      className={`border-2 p-4 text-left transition-all ${
                         selectedCategory === cat.name
-                          ? "border-blue-600 bg-blue-50"
-                          : "border-slate-200 bg-white hover:border-slate-300"
+                          ? "border-black bg-[#f8f8f8]"
+                          : "border-[#e8e4df] bg-white hover:border-black"
                       }`}
                     >
                       <div className="mb-2 text-3xl">{cat.icon}</div>
-                      <div className="font-semibold text-slate-900">{cat.name}</div>
-                      <div className="mt-1 text-xs text-slate-500">{cat.examples}</div>
+                      <div className="font-lora text-[#2c2416]">{cat.name}</div>
+                      <div className="mt-1 text-xs text-[#8b8680]">{cat.examples}</div>
                     </button>
                   ))}
                 </div>
@@ -263,9 +276,9 @@ export default function ProposalEditorClient({ proposal }: { proposal: Proposal 
             </div>
 
             {/* Add Item Form */}
-            <div className="overflow-hidden rounded-xl bg-white shadow">
-              <div className="border-b border-slate-200 bg-slate-50 px-6 py-4">
-                <h2 className="text-lg font-semibold text-slate-900">
+            <div className="overflow-hidden rounded-lg bg-white border border-[#e8e4df] shadow-sm">
+              <div className="border-b border-[#e8e4df] bg-gradient-to-r from-[#f5f3f0] to-[#f0ede8] px-6 py-4">
+                <h2 className="font-playfair text-xl text-[#2c2416]">
                   Add Item Details
                 </h2>
               </div>
@@ -274,7 +287,7 @@ export default function ProposalEditorClient({ proposal }: { proposal: Proposal 
                   <div>
                     <label
                       htmlFor="title"
-                      className="block text-sm font-medium text-slate-700"
+                      className="block text-sm font-lato uppercase tracking-wide text-[#666666]"
                     >
                       Title *
                     </label>
@@ -286,7 +299,7 @@ export default function ProposalEditorClient({ proposal }: { proposal: Proposal 
                         setFormData({ ...formData, title: e.target.value })
                       }
                       required
-                      className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="mt-2 block w-full border border-[#e8e4df] px-3 py-2 text-[#2c2416] focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
                       placeholder="e.g., Private Chef Dinner"
                     />
                   </div>
@@ -294,7 +307,7 @@ export default function ProposalEditorClient({ proposal }: { proposal: Proposal 
                   <div>
                     <label
                       htmlFor="description"
-                      className="block text-sm font-medium text-slate-700"
+                      className="block text-sm font-lato uppercase tracking-wide text-[#666666]"
                     >
                       Description
                     </label>
@@ -305,7 +318,7 @@ export default function ProposalEditorClient({ proposal }: { proposal: Proposal 
                         setFormData({ ...formData, description: e.target.value })
                       }
                       rows={3}
-                      className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="mt-2 block w-full border border-[#e8e4df] px-3 py-2 text-[#2c2416] focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
                       placeholder="Provide details about this experience..."
                     />
                   </div>
@@ -313,7 +326,7 @@ export default function ProposalEditorClient({ proposal }: { proposal: Proposal 
                   <div>
                     <label
                       htmlFor="scheduledAt"
-                      className="block text-sm font-medium text-slate-700"
+                      className="block text-sm font-lato uppercase tracking-wide text-[#666666]"
                     >
                       Date & Time *
                     </label>
@@ -325,14 +338,14 @@ export default function ProposalEditorClient({ proposal }: { proposal: Proposal 
                         setFormData({ ...formData, scheduledAt: e.target.value })
                       }
                       required
-                      className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="mt-2 block w-full border border-[#e8e4df] px-3 py-2 text-[#2c2416] focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
                     />
                   </div>
 
                   <div>
                     <label
                       htmlFor="price"
-                      className="block text-sm font-medium text-slate-700"
+                      className="block text-sm font-lato uppercase tracking-wide text-[#666666]"
                     >
                       Price (USD) *
                     </label>
@@ -345,7 +358,7 @@ export default function ProposalEditorClient({ proposal }: { proposal: Proposal 
                         setFormData({ ...formData, price: e.target.value })
                       }
                       required
-                      className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="mt-2 block w-full border border-[#e8e4df] px-3 py-2 text-[#2c2416] focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
                       placeholder="0.00"
                     />
                   </div>
@@ -353,7 +366,7 @@ export default function ProposalEditorClient({ proposal }: { proposal: Proposal 
                   <button
                     type="submit"
                     disabled={!selectedCategory}
-                    className="w-full rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="w-full bg-black px-4 py-3 text-sm font-lato font-semibold uppercase tracking-wide text-white transition-all duration-300 hover:shadow-2xl disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     Add to Itinerary
                   </button>
@@ -364,13 +377,13 @@ export default function ProposalEditorClient({ proposal }: { proposal: Proposal 
 
           {/* Right Column - Current Items */}
           <div>
-            <div className="overflow-hidden rounded-xl bg-white shadow">
-              <div className="border-b border-slate-200 bg-slate-50 px-6 py-4">
+            <div className="overflow-hidden rounded-lg bg-white border border-[#e8e4df] shadow-sm">
+              <div className="border-b border-[#e8e4df] bg-gradient-to-r from-[#f5f3f0] to-[#f0ede8] px-6 py-4">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-semibold text-slate-900">
+                  <h2 className="font-playfair text-xl text-[#2c2416]">
                     Itinerary Items
                   </h2>
-                  <span className="text-sm text-slate-600">
+                  <span className="text-sm text-[#8b8680]">
                     {items.length} {items.length === 1 ? "item" : "items"}
                   </span>
                 </div>
@@ -378,7 +391,7 @@ export default function ProposalEditorClient({ proposal }: { proposal: Proposal 
               <div className="p-6">
                 {items.length === 0 ? (
                   <div className="py-12 text-center">
-                    <p className="text-slate-600">
+                    <p className="font-lora text-[#8b8680]">
                       No items added yet. Select a category and add your first experience.
                     </p>
                   </div>
@@ -389,27 +402,27 @@ export default function ProposalEditorClient({ proposal }: { proposal: Proposal 
                       return (
                         <div
                           key={item.id}
-                          className="rounded-lg border border-slate-200 p-4"
+                          className="border border-[#e8e4df] p-4"
                         >
                           <div className="flex items-start gap-3">
                             <div className="text-2xl">{cat?.icon || "✨"}</div>
                             <div className="flex-1">
                               <div className="flex items-start justify-between">
                                 <div>
-                                  <h3 className="font-semibold text-slate-900">
+                                  <h3 className="font-playfair text-lg text-[#2c2416]">
                                     {item.title}
                                   </h3>
-                                  <p className="mt-1 text-xs text-slate-500">
+                                  <p className="mt-1 text-xs text-[#8b8680]">
                                     {item.category} •{" "}
                                     {new Date(item.scheduledAt).toLocaleString()}
                                   </p>
                                 </div>
-                                <p className="font-bold text-slate-900">
+                                <p className="font-playfair text-lg text-[#d4af37]">
                                   ${item.price.toFixed(2)}
                                 </p>
                               </div>
                               {item.description && (
-                                <p className="mt-2 text-sm text-slate-600">
+                                <p className="mt-2 text-sm text-[#8b8680]">
                                   {item.description}
                                 </p>
                               )}
@@ -420,10 +433,10 @@ export default function ProposalEditorClient({ proposal }: { proposal: Proposal 
                     })}
 
                     {/* Total */}
-                    <div className="rounded-lg bg-slate-900 p-4">
+                    <div className="bg-black p-4">
                       <div className="flex items-center justify-between">
-                        <span className="font-semibold text-white">Total Cost</span>
-                        <span className="text-2xl font-bold text-white">
+                        <span className="font-lato text-xs uppercase tracking-wide text-[#d4af37]">Total Cost</span>
+                        <span className="text-2xl font-playfair text-white">
                           ${totalCost.toFixed(2)}
                         </span>
                       </div>

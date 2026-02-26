@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { prisma } from "@/app/lib/prisma";
 
 interface ProposalItem {
   id: number;
@@ -8,22 +9,37 @@ interface ProposalItem {
 interface Proposal {
   id: number;
   status: string;
-  createdAt: string;
-  sentAt: string | null;
+  createdAt: Date;
+  sentAt: Date | null;
   items: ProposalItem[];
 }
 
 export default async function ConciergeDashboard() {
-  const reservationsRes = await fetch("http://localhost:3000/api/reservations", {
-    cache: "no-store",
+  const reservation = await prisma.reservation.findFirst({
+    include: {
+      member: true,
+    },
   });
-  const reservations = await reservationsRes.json();
-  const reservation = Array.isArray(reservations) ? reservations[0] : reservations;
 
-  const proposalsRes = await fetch("http://localhost:3000/api/proposals", {
-    cache: "no-store",
+  if (!reservation) {
+    return (
+      <div className="min-h-screen bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16">
+          <p className="font-lora text-lg text-[#666666]">No reservation found.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const proposals = await prisma.proposal.findMany({
+    include: {
+      reservation: {
+        include: { member: true },
+      },
+      items: true,
+    },
+    orderBy: { createdAt: "desc" },
   });
-  const proposals = await proposalsRes.json();
 
   return (
     <div className="min-h-screen bg-white">

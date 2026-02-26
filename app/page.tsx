@@ -37,7 +37,7 @@ export default function Home() {
                 Curated Itineraries
               </h1>
               <p className="font-lora text-lg text-[#8b8680] leading-relaxed">
-                Discover expertly crafted travel proposals designed for the discerning traveler. Each itinerary is meticulously tailored to create unforgettable luxury experiences at the world's finest destinations.
+                Discover expertly crafted travel proposals designed for the discerning traveler. Each itinerary is meticulously tailored to create unforgettable luxury experiences at the world&apos;s finest destinations.
               </p>
             </div>
 
@@ -86,7 +86,7 @@ export default function Home() {
                     Bespoke Travel Solutions
                   </h2>
                   <p className="font-lora text-[#8b8680] text-sm max-w-xs mx-auto">
-                    Exclusive access to the world's most coveted resorts and experiences
+                    Exclusive access to the world&apos;s most coveted resorts and experiences
                   </p>
                 </div>
               </div>

@@ -1,15 +1,12 @@
-import { PrismaClient } from "@prisma/client";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
-
-const adapter = new PrismaBetterSqlite3({ url: "file:./dev.db" });
-const prisma = new PrismaClient({ adapter });
+import { prisma } from "@/app/lib/prisma";
+import { NextRequest } from "next/server";
 
 export async function POST(
-  req: Request,
+  req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await context.params; // ⭐ FIX: unwrap params
+    const { id } = await context.params;
 
     const body = await req.json();
     const { category, title, description, scheduledAt, price } = body;
