@@ -15,6 +15,7 @@ export default async function MemberProposalPage({
         include: { member: true },
       },
       items: true,
+      guests: true,
       sentEmails: true,
     },
   });

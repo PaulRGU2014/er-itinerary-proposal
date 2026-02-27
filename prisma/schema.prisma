@@ -26,18 +26,19 @@ model Reservation {
 
 model Proposal {
   id            Int             @id @default(autoincrement())
-  reservation   Reservation     @relation(fields: [reservationId], references: [id])
+  reservation   Reservation     @relation(fields: [reservationId], references: [id], onDelete: Cascade)
   reservationId Int
   status        ProposalStatus  @default(DRAFT)
   createdAt     DateTime        @default(now())
   sentAt        DateTime?
   items         ProposalItem[]
+  guests        ProposalGuest[]
   sentEmails    SentEmail[]
 }
 
 model ProposalItem {
   id          Int       @id @default(autoincrement())
-  proposal    Proposal  @relation(fields: [proposalId], references: [id])
+  proposal    Proposal  @relation(fields: [proposalId], references: [id], onDelete: Cascade)
   proposalId  Int
   category    String
   title       String
@@ -46,9 +47,18 @@ model ProposalItem {
   price       Float
 }
 
+model ProposalGuest {
+  id        Int      @id @default(autoincrement())
+  proposal  Proposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+  proposalId Int
+  name      String
+  email     String
+  createdAt DateTime @default(now())
+}
+
 model SentEmail {
   id         Int      @id @default(autoincrement())
-  proposal   Proposal @relation(fields: [proposalId], references: [id])
+  proposal   Proposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
   proposalId Int
   sentAt     DateTime
   subject    String

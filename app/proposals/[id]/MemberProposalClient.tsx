@@ -12,10 +12,18 @@ interface ProposalItem {
   price: number;
 }
 
+interface ProposalGuest {
+  id: number;
+  name: string;
+  email: string;
+  createdAt?: string;
+}
+
 interface Proposal {
   id: number;
   status: string;
   items: ProposalItem[];
+  guests?: ProposalGuest[];
   reservation: {
     id: number;
     destination: string;
@@ -135,8 +143,14 @@ export default function MemberProposalClient({ proposal }: { proposal: Proposal 
             </h2>
             <div className="space-y-3 text-left">
               <p className="font-lora text-black">
-                <span className="font-semibold">Guest:</span> {reservation.member.name}
+                <span className="font-semibold">Primary Guest:</span> {reservation.member.name}
               </p>
+              {proposal.guests && proposal.guests.length > 0 && (
+                <p className="font-lora text-black">
+                  <span className="font-semibold">Additional Guests:</span>{" "}
+                  {proposal.guests.map((g) => g.name).join(", ")}
+                </p>
+              )}
               <p className="font-lora text-black">
                 <span className="font-semibold">Villa:</span> {reservation.villa}
               </p>
@@ -174,7 +188,7 @@ export default function MemberProposalClient({ proposal }: { proposal: Proposal 
       <div className="mx-auto max-w-4xl px-6 py-12">
         {/* Back Button */}
         <Link
-          href="/"
+          href={`/concierge/proposals/${proposal.id}`}
           className="mb-12 inline-flex items-center gap-2 px-6 py-3 text-[#666666] font-lato text-sm uppercase tracking-wide border border-[#f0f0f0] transition-all duration-300 hover:text-black hover:border-black hover:bg-[#f8f8f8]"
         >
           <svg
@@ -190,7 +204,7 @@ export default function MemberProposalClient({ proposal }: { proposal: Proposal 
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          <span>Home</span>
+          <span>Back to Editor</span>
         </Link>
 
         {/* Header */}
@@ -203,8 +217,11 @@ export default function MemberProposalClient({ proposal }: { proposal: Proposal 
           <h1 className="font-playfair text-5xl text-[#2c2416] mb-4 leading-tight">
             Your Curated Itinerary
           </h1>
-          <p className="font-lora text-lg text-[#8b8680]">
+          <p className="font-lora text-lg text-[#8b8680] mb-3">
             A personalized experience crafted exclusively for you
+          </p>
+          <p className="font-playfair text-2xl text-[#d4af37]">
+            {reservation.member.name}
           </p>
         </div>
 
@@ -243,6 +260,79 @@ export default function MemberProposalClient({ proposal }: { proposal: Proposal 
                   })}
                 </p>
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Guests Card */}
+        <div className="mb-12 overflow-hidden rounded-lg bg-white border border-[#e8e4df] shadow-sm">
+          <div className="bg-gradient-to-r from-[#f5f3f0] to-[#f0ede8] border-b border-[#e8e4df] px-8 py-8">
+            <h2 className="font-playfair text-2xl text-[#2c2416] mb-2">
+              Your Party
+            </h2>
+            <p className="font-lora text-[#8b8680] text-sm">
+              {1 + (proposal.guests?.length || 0)} {1 + (proposal.guests?.length || 0) === 1 ? "guest" : "guests"}
+            </p>
+          </div>
+          <div className="px-8 py-8">
+            <div className="space-y-4">
+              {/* Primary member */}
+              <div className="flex items-center gap-4 pb-4 border-b border-[#e8e4df]">
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#d4af37]">
+                  <svg
+                    className="w-6 h-6 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <p className="font-playfair text-lg text-[#2c2416]">
+                    {reservation.member.name}
+                  </p>
+                  <p className="font-lora text-sm text-[#8b8680]">
+                    {reservation.member.email}
+                  </p>
+                </div>
+              </div>
+
+              {/* Additional guests */}
+              {proposal.guests && proposal.guests.length > 0 ? (
+                proposal.guests.map((guest) => (
+                  <div key={guest.id} className="flex items-center gap-4">
+                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#f5f3f0] border border-[#d4af37]">
+                      <svg
+                        className="w-6 h-6 text-[#8b8680]"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-playfair text-lg text-[#2c2416]">
+                        {guest.name}
+                      </p>
+                      <p className="font-lora text-sm text-[#8b8680]">
+                        {guest.email}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="font-lora text-[#8b8680] text-center py-2 italic">
+                  No additional guests added
+                </p>
+              )}
             </div>
           </div>
         </div>

@@ -15,6 +15,7 @@ export async function GET(
           include: { member: true },
         },
         items: true,
+        guests: true,
         sentEmails: true,
       },
     });

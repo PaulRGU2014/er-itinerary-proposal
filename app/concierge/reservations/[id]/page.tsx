@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/app/lib/prisma";
+import DeleteReservationButton from "./DeleteReservationButton";
 
 export default async function ReservationPage({
   params,
@@ -128,6 +129,13 @@ export default async function ReservationPage({
                 </Link>
               </div>
             )}
+
+            <div className="mt-8 pt-8 border-t border-[#e8e4df]">
+              <p className="font-lora text-sm text-[#8b8680] mb-4">
+                Danger Zone
+              </p>
+              <DeleteReservationButton reservationId={reservation.id} />
+            </div>
           </div>
         </div>
       </div>

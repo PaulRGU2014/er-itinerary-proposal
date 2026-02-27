@@ -15,17 +15,18 @@ interface Proposal {
 }
 
 export default async function ConciergeDashboard() {
-  const reservation = await prisma.reservation.findFirst({
+  const reservations = await prisma.reservation.findMany({
     include: {
       member: true,
     },
+    orderBy: { arrivalDate: "asc" },
   });
 
-  if (!reservation) {
+  if (reservations.length === 0) {
     return (
       <div className="min-h-screen bg-white">
         <div className="mx-auto max-w-7xl px-6 py-16">
-          <p className="font-lora text-lg text-[#666666]">No reservation found.</p>
+          <p className="font-lora text-lg text-[#666666]">No reservations found.</p>
         </div>
       </div>
     );
@@ -37,6 +38,7 @@ export default async function ConciergeDashboard() {
         include: { member: true },
       },
       items: true,
+      guests: true,
     },
     orderBy: { createdAt: "desc" },
   });
@@ -87,60 +89,55 @@ export default async function ConciergeDashboard() {
           </p>
         </div>
 
-        {/* Current Reservation Card */}
-        <div className="mb-12 overflow-hidden rounded-lg bg-white border border-[#e8e4df] shadow-sm">
-          <div className="border-b border-[#e8e4df] bg-gradient-to-r from-[#f5f3f0] to-[#f0ede8] px-8 py-6">
-            <h2 className="font-playfair text-2xl text-[#2c2416]">
-              Current Reservation
-            </h2>
-          </div>
-          <div className="p-8">
-            <div className="flex items-start justify-between">
-              <div>
-                <h3 className="font-playfair text-3xl text-[#2c2416] mb-2">
+        {/* Reservations Grid */}
+        <div className="mb-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {reservations.map((reservation) => (
+            <div
+              key={reservation.id}
+              className="overflow-hidden rounded-lg bg-white border border-[#e8e4df] shadow-sm hover:shadow-lg transition-all"
+            >
+              <div className="border-b border-[#e8e4df] bg-gradient-to-r from-[#f5f3f0] to-[#f0ede8] px-6 py-4">
+                <h3 className="font-playfair text-xl text-[#2c2416]">
                   {reservation.member.name}
                 </h3>
-                <p className="text-sm text-[#8b8680] mb-6">
+              </div>
+              <div className="p-6">
+                <p className="text-xs text-[#8b8680] font-lato uppercase tracking-wide mb-4">
                   {reservation.member.email}
                 </p>
-                <div className="space-y-3">
-                  <div className="border-l-2 border-[#d4af37] pl-4">
-                    <p className="text-sm text-[#8b8680]">DESTINATION</p>
+                <div className="space-y-3 mb-6">
+                  <div>
+                    <p className="text-xs text-[#8b8680] font-lato uppercase tracking-wide">Destination</p>
                     <p className="font-lora text-lg text-[#2c2416]">{reservation.destination}</p>
                   </div>
-                  <div className="border-l-2 border-[#d4af37] pl-4">
-                    <p className="text-sm text-[#8b8680]">VILLA</p>
-                    <p className="font-lora text-lg text-[#2c2416]">{reservation.villa}</p>
+                  <div>
+                    <p className="text-xs text-[#8b8680] font-lato uppercase tracking-wide">Villa</p>
+                    <p className="font-lora text-sm text-[#2c2416]">{reservation.villa}</p>
                   </div>
-                  <div className="border-l-2 border-[#d4af37] pl-4">
-                    <p className="text-sm text-[#8b8680]">DATES</p>
-                    <p className="font-lora text-lg text-[#2c2416]">
+                  <div>
+                    <p className="text-xs text-[#8b8680] font-lato uppercase tracking-wide">Dates</p>
+                    <p className="font-lora text-sm text-[#2c2416]">
                       {new Date(reservation.arrivalDate).toLocaleDateString("en-US", {
-                        month: "long",
+                        month: "short",
                         day: "numeric",
-                        year: "numeric",
                       })}{" "}
                       –{" "}
                       {new Date(reservation.departureDate).toLocaleDateString("en-US", {
-                        month: "long",
+                        month: "short",
                         day: "numeric",
-                        year: "numeric",
                       })}
                     </p>
                   </div>
                 </div>
+                <Link
+                  href={`/concierge/reservations/${reservation.id}`}
+                  className="w-full inline-flex items-center justify-center px-4 py-3 bg-black text-white font-lato text-xs font-semibold uppercase tracking-wide transition-all duration-300 hover:shadow-lg"
+                >
+                  View & Manage
+                </Link>
               </div>
-              <Link
-                href={`/concierge/reservations/${reservation.id}`}
-                className="inline-flex items-center px-6 py-3 bg-black text-white font-lato font-semibold text-sm uppercase tracking-wide transition-all duration-300 hover:shadow-2xl hover:scale-105"
-              >
-                View Details
-                <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </Link>
             </div>
-          </div>
+          ))}
         </div>
 
         {/* Proposals Section */}
@@ -154,12 +151,7 @@ export default async function ConciergeDashboard() {
             {proposals.length === 0 ? (
               <div className="py-16 text-center">
                 <p className="font-lora text-lg text-[#666666] mb-6">No proposals created yet.</p>
-                <Link
-                  href={`/concierge/reservations/${reservation.id}`}
-                  className="inline-flex items-center px-8 py-3 bg-black text-white font-lato font-semibold text-sm uppercase tracking-wide transition-all duration-300 hover:shadow-2xl hover:scale-105"
-                >
-                  Create First Proposal
-                </Link>
+                <p className="font-lora text-sm text-[#8b8680]">Start by selecting a reservation above to create the first proposal.</p>
               </div>
             ) : (
               <div className="space-y-4">

@@ -12,10 +12,18 @@ interface ProposalItem {
   price: number;
 }
 
+interface ProposalGuest {
+  id: number;
+  name: string;
+  email: string;
+  createdAt?: string;
+}
+
 interface Proposal {
   id: number;
   status: string;
   items: ProposalItem[];
+  guests?: ProposalGuest[];
   reservation: {
     id: number;
     destination: string;
@@ -72,6 +80,11 @@ export default function ProposalEditorClient({ proposal }: { proposal: Proposal 
     price: "",
   });
   const [items, setItems] = useState(proposal.items);
+  const [guests, setGuests] = useState<ProposalGuest[]>(proposal.guests || []);
+  const [guestFormData, setGuestFormData] = useState({
+    name: "",
+    email: "",
+  });
   const [sending, setSending] = useState(false);
 
   const reservation = proposal.reservation;
@@ -138,6 +151,55 @@ export default function ProposalEditorClient({ proposal }: { proposal: Proposal 
     }
   };
 
+  const handleAddGuest = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!guestFormData.name || !guestFormData.email) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/proposals/${proposal.id}/guests`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(guestFormData),
+      });
+
+      if (res.ok) {
+        const newGuest = await res.json();
+        setGuests([...guests, newGuest]);
+        setGuestFormData({ name: "", email: "" });
+      } else {
+        alert("Failed to add guest");
+      }
+    } catch (error) {
+      console.error("Error adding guest:", error);
+      alert("Failed to add guest");
+    }
+  };
+
+  const handleRemoveGuest = async (guestId: number) => {
+    if (!confirm("Remove this guest from the proposal?")) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/proposals/${proposal.id}/guests/${guestId}`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        setGuests(guests.filter((g) => g.id !== guestId));
+      } else {
+        alert("Failed to remove guest");
+      }
+    } catch (error) {
+      console.error("Error removing guest:", error);
+      alert("Failed to remove guest");
+    }
+  };
+
   const totalCost = items.reduce((sum: number, item: ProposalItem) => sum + item.price, 0);
 
   return (
@@ -181,7 +243,6 @@ export default function ProposalEditorClient({ proposal }: { proposal: Proposal 
             </button>
             <Link
               href={`/proposals/${proposal.id}`}
-              target="_blank"
               className="px-6 py-2 border border-black text-black font-lato text-xs uppercase tracking-wide transition-all duration-300 hover:bg-black hover:text-white"
             >
               View as Member
@@ -215,6 +276,61 @@ export default function ProposalEditorClient({ proposal }: { proposal: Proposal 
           </span>
         </div>
 
+        {showPreview && (
+          <div className="mb-10 overflow-hidden rounded-lg border border-[#e8e4df] bg-white shadow-sm">
+            <div className="border-b border-[#e8e4df] bg-gradient-to-r from-[#f5f3f0] to-[#f0ede8] px-6 py-4">
+              <h2 className="font-playfair text-2xl text-[#2c2416]">
+                Member Preview
+              </h2>
+              <p className="font-lora text-sm text-[#8b8680]">
+                {reservation.member.name} · {reservation.destination}
+              </p>
+            </div>
+            <div className="p-6">
+              {items.length === 0 ? (
+                <p className="font-lora text-[#8b8680]">
+                  Add at least one item to see the member preview.
+                </p>
+              ) : (
+                <div className="space-y-4">
+                  {items.map((item) => (
+                    <div key={item.id} className="border border-[#e8e4df] p-4">
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <p className="font-playfair text-lg text-[#2c2416]">
+                            {item.title}
+                          </p>
+                          <p className="mt-1 text-xs text-[#8b8680]">
+                            {item.category} · {new Date(item.scheduledAt).toLocaleString()}
+                          </p>
+                          {item.description && (
+                            <p className="mt-2 text-sm text-[#8b8680]">
+                              {item.description}
+                            </p>
+                          )}
+                        </div>
+                        <p className="font-playfair text-lg text-[#d4af37]">
+                          ${item.price.toFixed(2)}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                  <div className="bg-black p-4">
+                    <div className="flex items-center justify-between">
+                      <span className="font-lato text-xs uppercase tracking-wide text-[#d4af37]">
+                        Total Cost
+                      </span>
+                      <span className="text-2xl font-playfair text-white">
+                        ${totalCost.toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         <div className="grid gap-6 lg:grid-cols-2">
           {/* Left Column - Add Items */}
           <div className="space-y-6">
@@ -243,6 +359,92 @@ export default function ProposalEditorClient({ proposal }: { proposal: Proposal 
                     {new Date(reservation.departureDate).toLocaleDateString()}
                   </p>
                 </div>
+              </div>
+            </div>
+
+            {/* Manage Guests */}
+            <div className="overflow-hidden rounded-lg bg-white border border-[#e8e4df] shadow-sm">
+              <div className="border-b border-[#e8e4df] bg-gradient-to-r from-[#f5f3f0] to-[#f0ede8] px-6 py-4">
+                <h2 className="font-playfair text-xl text-[#2c2416]">
+                  Additional Guests
+                </h2>
+                <p className="font-lora text-sm text-[#8b8680] mt-1">
+                  {reservation.member.name} + {guests.length} {guests.length === 1 ? "guest" : "guests"}
+                </p>
+              </div>
+              <div className="p-6">
+                {/* Add Guest Form */}
+                <form onSubmit={handleAddGuest} className="mb-6 space-y-3 pb-6 border-b border-[#e8e4df]">
+                  <div>
+                    <label
+                      htmlFor="guestName"
+                      className="block text-sm font-lato uppercase tracking-wide text-[#666666]"
+                    >
+                      Guest Name
+                    </label>
+                    <input
+                      type="text"
+                      id="guestName"
+                      value={guestFormData.name}
+                      onChange={(e) =>
+                        setGuestFormData({ ...guestFormData, name: e.target.value })
+                      }
+                      className="mt-2 block w-full border border-[#e8e4df] px-3 py-2 text-[#2c2416] focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+                      placeholder="e.g., John Smith"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="guestEmail"
+                      className="block text-sm font-lato uppercase tracking-wide text-[#666666]"
+                    >
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      id="guestEmail"
+                      value={guestFormData.email}
+                      onChange={(e) =>
+                        setGuestFormData({ ...guestFormData, email: e.target.value })
+                      }
+                      className="mt-2 block w-full border border-[#e8e4df] px-3 py-2 text-[#2c2416] focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+                      placeholder="john@example.com"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full bg-black px-4 py-2 text-sm font-lato font-semibold uppercase tracking-wide text-white transition-all duration-300 hover:shadow-lg"
+                  >
+                    Add Guest
+                  </button>
+                </form>
+
+                {/* Guests List */}
+                {guests.length === 0 ? (
+                  <p className="text-sm text-[#8b8680] text-center py-4">
+                    No additional guests added yet
+                  </p>
+                ) : (
+                  <div className="space-y-3">
+                    {guests.map((guest) => (
+                      <div
+                        key={guest.id}
+                        className="flex items-center justify-between border border-[#e8e4df] p-3"
+                      >
+                        <div>
+                          <p className="font-semibold text-[#2c2416]">{guest.name}</p>
+                          <p className="text-sm text-[#8b8680]">{guest.email}</p>
+                        </div>
+                        <button
+                          onClick={() => handleRemoveGuest(guest.id)}
+                          className="px-3 py-1 text-xs uppercase tracking-wide text-red-600 border border-red-200 hover:bg-red-50 transition-colors"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
